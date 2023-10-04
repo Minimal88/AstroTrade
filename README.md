@@ -25,7 +25,7 @@ cd AstroTrade
 Use the provided Dockerfile to build the Docker image for the application:
 
 ```shell
-docker build -t astrobot-trading .
+docker build -t astrobot-trading -f docker/Dockerfile .
 ```
 
 ### 3. Run the Docker Container

@@ -1,0 +1,3 @@
+tkinter
+Flask==1.1.2
+python-binance
