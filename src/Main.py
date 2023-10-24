@@ -1,24 +1,35 @@
-import tkinter as tk
+from flask import Flask, render_template, request
+import pandas as pd
+import plotly
+import plotly.express as px
 
-# Create the main window
-window = tk.Tk()
+app = Flask(__name__)
 
-# Create a label
-label = tk.Label(text="Symbol")
+# Sample data
+portfolio = pd.DataFrame({
+    'Symbol': ['AAPL', 'TSLA', 'BTC'], 
+    'Qty': [10, 5, 2],
+    'Price': [100, 200, 30000]
+})
 
-# Create a text box
-text_box = tk.Entry()
+equity = pd.DataFrame({
+    'Date': pd.date_range('2023-01-01', periods=30),
+    'Equity': [100000 + (i*1000) for i in range(30)] 
+})
 
-# Create a button
-button = tk.Button(text="Simulate Trade")
+@app.route('/')
+def dashboard():
+    fig = px.line(equity, x='Date', y='Equity')
+    return render_template('dashboard.html', 
+        portfolio=portfolio.to_html(),
+        equity=plotly.offline.plot(fig, output_type='div')
+    )
 
-# Set the layout of the widgets
-label.pack()
-text_box.pack()
-button.pack()
+@app.route('/trade')
+def trade():
+    return render_template('trade.html') 
 
-# Bind the button to a function
-button.config(command=lambda: simulate_trade(text_box.get()))
+# Other view functions and templates 
 
-# Start the main loop
-window.mainloop()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')

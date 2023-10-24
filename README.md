@@ -33,10 +33,18 @@ docker build -t astrobot-trading -f docker/Dockerfile .
 Run the Docker container to start the AstroBot Trading application:
 
 ```shell
-docker run -d -p 8080:8080 astrobot-trading
+docker run -d -p 5000:5000 astrobot-trading
 ```
 
-The application will be accessible at `http://localhost:8080`.
+The application will be accessible at `http://localhost:5000`.
+
+### 4. Stop and Remove the Docker Container
+
+Stop and Remove all the Docker containers:
+
+```shell
+docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
+```
 
 ## Configuration
 

@@ -14,8 +14,17 @@ COPY ./docker/Requirements.txt .
 # Install Python dependencies from Requirements.txt
 RUN pip install -r Requirements.txt
 
+# Expose port for Flask app
+EXPOSE 5000 
+
+# Define environment variable
+ENV FLASK_APP=main.py
+
 # Copy the application source code into the container
 COPY ./src/ .
 
 # Specify the command to run your application
-CMD ["python", "main.py"]
+#CMD ["python", "main.py"]
+
+# Run flask app with gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "main:app"]
