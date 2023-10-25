@@ -1,5 +1,6 @@
 pandas
 plotly
 Flask
+flask-debugtoolbar
 python-binance
 gunicorn

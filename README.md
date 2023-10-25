@@ -38,7 +38,13 @@ docker run -d -p 5000:5000 astrobot-trading
 
 The application will be accessible at `http://localhost:5000`.
 
-### 4. Stop and Remove the Docker Container
+### 4. Monitor log files with Docker
+
+```shell
+docker exec -it $(docker ps -a -q) tail -f /app/app.log
+```
+
+### 5. Stop and Remove the Docker Container
 
 Stop and Remove all the Docker containers:
 
