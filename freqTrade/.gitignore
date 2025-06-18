@@ -1,0 +1,31 @@
+# Freqtrade logs and cache
+user_data/logs/
+user_data/backtest_results/
+user_data/hyperopt_results/
+user_data/plot/
+user_data/data/
+
+# SQLite database files
+user_data/*.sqlite*
+!user_data/strategies/
+!user_data/hyperopts/
+!user_data/notebooks/
+
+# AI model outputs (if any)
+user_data/freqaimodels/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+
+# VSCode / PyCharm / Jupyter
+.vscode/
+.idea/
+*.ipynb_checkpoints/
+
+# Shell scripts output
+*.log
+
+# Optional: ignore config (uncomment if you want to keep it private)
+# user_data/config.json

@@ -1,4 +1,4 @@
-# Usage
+# FreqTrade Container Usage 
 https://www.omgthecloud.com/freqtrade-plain-os-to-running-in-minutes/
 
 ## Start FreqTrade Container
@@ -8,7 +8,9 @@ https://www.omgthecloud.com/freqtrade-plain-os-to-running-in-minutes/
 
 ## Logs an terminal
 See the Container logs:
+```
 docker logs -f freqtrade
+```
 
 Enter into the Freqtrade Container
 ```
@@ -19,6 +21,25 @@ docker exec -it freqtrade /bin/bash
 ```
 ./stopFreqTrade.sh
 ```
+
+
+
+# FreqTrade Trading Usage
+
+## Download historical data
+
+```
+docker exec -it freqtrade freqtrade download-data --timeframe 5m --exchange binance
+```
+
+You can specify a pair like this:
+```
+docker exec -it freqtrade freqtrade download-data --timeframe 5m --exchange binance --pairs BTC/USDT
+```
+
+
+
+
 
 
 # 📲 Setting up Telegram Notifications for Freqtrade
