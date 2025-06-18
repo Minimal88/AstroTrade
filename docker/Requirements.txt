@@ -4,3 +4,4 @@ Flask
 flask-debugtoolbar
 python-binance
 gunicorn
+pytest
