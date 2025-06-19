@@ -1,18 +1,14 @@
-# Pulls the freqTrade docker image
-# mkdir -p ft
-# cd ft
-# curl https://raw.githubusercontent.com/freqtrade/freqtrade/stable/docker-compose.yml -o docker-compose.yml
-docker-compose pull
+#!/bin/bash
 
-# Creates the file and folder structure
-# docker-compose run --rm freqtrade create-userdir --userdir user_data
+# Check if webserver mode is requested
+if [ "$1" == "webserver" ]; then
+    COMPOSE_FILE="docker-compose-webserver.yml"
+else
+    COMPOSE_FILE="docker-compose.yml"
+fi
 
-# Setup the FreqTrade config
-# docker-compose run --rm freqtrade new-config --config user_data/config.json
-
-# On your docker-compose.yml remove "127.0.0.1" to match:
-# ports:
-#     - "8080:8080"
+# Pull latest images
+docker-compose -f ${COMPOSE_FILE} pull
 
 # Start FreqTrade
-docker-compose up -d
+docker-compose -f ${COMPOSE_FILE} up -d
