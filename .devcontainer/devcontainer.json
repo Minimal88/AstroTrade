@@ -1,0 +1,17 @@
+{
+    "name": "Freqtrade Dev Container",
+    "dockerComposeFile": "../freqTrade/docker-compose.yml",
+    "service": "freqtrade",
+    "workspaceFolder": "/freqtrade/user_data",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python"
+            }
+        }
+    }
+}

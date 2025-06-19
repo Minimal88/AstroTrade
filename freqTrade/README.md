@@ -5,6 +5,10 @@ https://www.omgthecloud.com/freqtrade-plain-os-to-running-in-minutes/
 ```
 ./startFreqTrade.sh
 ```
+or webserver mode:
+```
+./startFreqTrade.sh webserver
+```
 
 ## Logs an terminal
 See the Container logs:
@@ -38,7 +42,19 @@ docker exec -it freqtrade freqtrade download-data --timeframe 5m --exchange bina
 ```
 
 
+## Run the backtest
 
+```
+docker exec -it freqtrade freqtrade backtesting --strategy ScalpingStrategy
+```
+
+If you want more detailed output or a specific pair:
+
+```
+docker exec -it freqtrade freqtrade backtesting --strategy ScalpingStrategy --timeframe 5m --pairs BTC/USDT --export trades
+```
+
+## (Optional) Check the results
 
 
 
