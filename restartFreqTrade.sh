@@ -1,10 +1,14 @@
 #!/bin/bash
 
+# Stop and remove the existing FreqTrade container
+docker stop freqtrade
+docker rm freqtrade
+
 # Check if webserver mode is requested
 if [ "$1" == "webserver" ]; then
-    COMPOSE_FILE="docker-compose-webserver.yml"
+    COMPOSE_FILE="freqTrade/docker-compose-webserver.yml"
 else
-    COMPOSE_FILE="docker-compose.yml"
+    COMPOSE_FILE="freqTrade/docker-compose.yml"
 fi
 
 # Build the custom image
