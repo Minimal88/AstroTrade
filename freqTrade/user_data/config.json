@@ -4,7 +4,7 @@
     "max_open_trades": 60,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
-    "stoploss": -0.10,
+    "timeframe": "15m",
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "dry_run": true,
@@ -59,7 +59,7 @@
         }
     ],
     "telegram": {
-        "enabled": false,
+        "enabled": true,
         "token": "7951971595:AAHz79jfKMWwCNgxdzPqUMbk5wVgdacePMY",
         "chat_id": ""
     },
