@@ -1,0 +1,8 @@
+FROM freqtradeorg/freqtrade:stable
+
+USER root
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+RUN pip install ta==0.11.0
+COPY .bashrc /home/ftuser/.bashrc
+RUN chown ftuser:ftuser /home/ftuser/.bashrc
+USER ftuser

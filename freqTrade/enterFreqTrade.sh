@@ -1,0 +1,1 @@
+docker exec -it freqtrade /bin/bash

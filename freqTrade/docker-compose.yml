@@ -1,7 +1,10 @@
 ---
 services:
   freqtrade:
-    image: freqtradeorg/freqtrade:stable
+    build:
+      context: .
+      dockerfile: "./Dockerfile.custom"
+    # image: freqtradeorg/freqtrade:stable
     # image: freqtradeorg/freqtrade:develop
     # Use plotting image
     # image: freqtradeorg/freqtrade:develop_plot

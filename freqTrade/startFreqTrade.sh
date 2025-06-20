@@ -7,8 +7,11 @@ else
     COMPOSE_FILE="docker-compose.yml"
 fi
 
+# Build the custom image
+docker compose -f ${COMPOSE_FILE} build
+
 # Pull latest images
-docker compose -f ${COMPOSE_FILE} pull
+# docker compose -f ${COMPOSE_FILE} pull
 
 # Start FreqTrade
 docker compose -f ${COMPOSE_FILE} up -d
