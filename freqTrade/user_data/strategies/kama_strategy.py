@@ -1,3 +1,4 @@
+# https://jesse.trade/strategies/kama-trendfollowing
 import datetime
 from freqtrade.strategy import IStrategy, IntParameter, DecimalParameter
 from pandas import DataFrame
@@ -17,8 +18,8 @@ class KamaStrategy(IStrategy):
         trailing_stop_positive_offset (float): Trailing stop positive offset.
         trailing_only_offset_is_reached (bool): Only trail after offset is reached.
         use_custom_stoploss (bool): Use custom stoploss logic.
-        use_sell_signal (bool): Use sell signal logic.
-        sell_profit_only (bool): Only sell if profitable.
+        use_exit_signal (bool): Use sell signal logic.
+        exit_profit_only (bool): Only sell if profitable.
         ignore_buying_expired_candle_after (int): Ignore buying after N candles.
         kama_window (IntParameter): Window size for KAMA calculation.
         adx_threshold (IntParameter): ADX threshold for trend strength.
@@ -37,7 +38,7 @@ class KamaStrategy(IStrategy):
             Sets sell signal when close is below KAMA and long-term KAMA, ADX and trendiness thresholds are met,
             and Bollinger Band width is below threshold.
 
-        custom_sell(pair, trade, current_time, current_rate, current_profit, **kwargs):
+        custom_exit(pair, trade, current_time, current_rate, current_profit, **kwargs):
             (Optional) Example placeholder for ATR-based custom sell logic.
     """
     INTERFACE_VERSION = 3
@@ -51,8 +52,8 @@ class KamaStrategy(IStrategy):
     trailing_only_offset_is_reached = True
 
     use_custom_stoploss = False
-    use_sell_signal = True
-    sell_profit_only = False
+    use_exit_signal = True
+    exit_profit_only = False
     ignore_buying_expired_candle_after = 0
 
     # timeframe = '30m'
@@ -115,7 +116,7 @@ class KamaStrategy(IStrategy):
 
         return df
 
-    def populate_buy_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
+    def populate_entry_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
         """
         Populates the 'buy' signal in the DataFrame based on custom trading conditions for Long positions.
 
@@ -182,12 +183,12 @@ class KamaStrategy(IStrategy):
         ] = 1
         return df
 
-    def populate_sell_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
+    def populate_exit_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
         """
-        Populates the 'sell' signal in the DataFrame based on multiple technical indicators for Long Positions.
+        Populates the 'exit' signal in the DataFrame based on multiple technical indicators for Long Positions.
 
-        This function applies a set of conditions to the input DataFrame `df` to determine when a sell signal should be generated.
-        The sell signal is set to 1 for rows where all of the following conditions are met:
+        This function applies a set of conditions to the input DataFrame `df` to determine when a exit signal should be generated.
+        The exit signal is set to 1 for rows where all of the following conditions are met:
             - The closing price is below the KAMA (Kaufman's Adaptive Moving Average).
             - The ADX (Average Directional Index) is above a specified threshold, indicating a strong trend.
             - The closing price is below the long-term KAMA, suggesting a bearish trend.
@@ -214,30 +215,30 @@ class KamaStrategy(IStrategy):
         return df
 
     # ATR-based stoploss/takeprofit is not natively supported in Freqtrade, but you can use custom_stoploss
-    # or custom_sell for advanced logic if needed.
+    # or custom_exit for advanced logic if needed.
 
-    def custom_sell(self, pair: str, trade, current_time, current_rate, current_profit, **kwargs):
+    def custom_exit(self, pair: str, trade, current_time, current_rate, current_profit, **kwargs):
         # Example: ATR-based take profit/stoploss (not exactly like Jesse, but similar)
         # You can access indicators via self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        # df_tuple = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        # if df_tuple is None or trade is None:
-        #     return None
+        df_tuple = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        if df_tuple is None or trade is None:
+            return None
 
-        # df = df_tuple[0] if isinstance(df_tuple, tuple) else df_tuple
-        # if df is None or len(df) == 0:
-        #     return None
+        df = df_tuple[0] if isinstance(df_tuple, tuple) else df_tuple
+        if df is None or len(df) == 0:
+            return None
 
-        # # Find the current candle
-        # last_candle = df.iloc[-1]
-        # atr = last_candle.get('atr', None)
-        # if atr is None:
-        #     return None
+        # Find the current candle
+        last_candle = df.iloc[-1]
+        atr = last_candle.get('atr', None)
+        if atr is None:
+            return None
 
-        # # Example logic: Sell if price drops below entry - 2*ATR (trailing stop)
-        # if current_rate < (trade.open_rate - 2 * atr):
-        #     return 'atr_stoploss'
+        # Example logic: Sell if price drops below entry - 2*ATR (trailing stop)
+        if current_rate < (trade.open_rate - 2 * atr):
+            return 'atr_stoploss'
 
-        # # Example logic: Take profit if price exceeds entry + 3*ATR
-        # if current_rate > (trade.open_rate + 3 * atr):
-        #     return 'atr_takeprofit'
+        # Example logic: Take profit if price exceeds entry + 3*ATR
+        if current_rate > (trade.open_rate + 3 * atr):
+            return 'atr_takeprofit'
         return None
