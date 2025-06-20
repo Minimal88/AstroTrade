@@ -1,0 +1,1 @@
+docker compose -f freqTrade/docker-compose-jupyter.yml up
