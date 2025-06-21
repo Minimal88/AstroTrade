@@ -1,10 +1,14 @@
 ---
 services:
   freqtrade:
-    image: freqtradeorg/freqtrade:stable
+    # image: freqtradeorg/freqtrade:stable
+    build:
+      context: .
+      dockerfile: "./Dockerfile.custom"
     restart: unless-stopped
     container_name: freqtrade
     volumes:
+      - "/home/astro/git/AstroTrade:/ws"
       - "./user_data:/freqtrade/user_data"
     ports:
       - "127.0.0.1:8080:8080"
