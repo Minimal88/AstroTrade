@@ -19,3 +19,6 @@ docker compose -f ${COMPOSE_FILE} build
 
 # Start FreqTrade
 docker compose -f ${COMPOSE_FILE} up -d  --remove-orphans
+
+# See the logs
+docker logs -f freqtrade
