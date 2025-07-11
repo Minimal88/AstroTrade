@@ -118,9 +118,9 @@ class KamaStrategy(IStrategy):
 
     def populate_entry_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
         """
-        Populates the 'buy' signal in the DataFrame based on custom trading conditions for Long positions.
+        Populates the 'enter_long' signal in the DataFrame based on custom trading conditions for Long positions.
 
-        This function evaluates a set of technical indicators and assigns a value of 1 to the 'buy' column
+        This function evaluates a set of technical indicators and assigns a value of 1 to the 'enter_long' column
         for rows where all the following conditions are met:
             - The closing price is above the Kaufman's Adaptive Moving Average (KAMA).
             - The Average Directional Index (ADX) is greater than a specified threshold.
@@ -137,7 +137,7 @@ class KamaStrategy(IStrategy):
             metadata (dict): Additional information, not used in this function.
 
         Returns:
-            DataFrame: The DataFrame with the 'buy' column updated according to the strategy's buy conditions.
+            DataFrame: The DataFrame with the 'enter_long' column updated according to the strategy's buy conditions.
         """
         df.loc[
             (
@@ -148,15 +148,16 @@ class KamaStrategy(IStrategy):
                 (df['bb_width'] < float(self.bb_width_threshold.value))
                 # No direct way to check "at least 10 candles since last trade" in Freqtrade
             ),
-            'buy'
+            'enter_long'
         ] = 1
+        
         return df
 
     def populate_short_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
         """
-        Populates the 'short' signal in the DataFrame based on custom trading conditions for Short positions.
+        Populates the 'enter_short' signal in the DataFrame based on custom trading conditions for Short positions.
 
-        This function evaluates a set of technical indicators and assigns a value of 1 to the 'short' column
+        This function evaluates a set of technical indicators and assigns a value of 1 to the 'enter_short' column
         for rows where all the following conditions are met:
             - The closing price is below the Kaufman's Adaptive Moving Average (KAMA).
             - The Average Directional Index (ADX) is greater than a specified threshold.
@@ -169,7 +170,7 @@ class KamaStrategy(IStrategy):
             metadata (dict): Additional information, not used in this function.
 
         Returns:
-            DataFrame: The DataFrame with the 'short' column updated according to the strategy's short conditions.
+            DataFrame: The DataFrame with the 'enter_short' column updated according to the strategy's short conditions.
         """
         df.loc[
             (
@@ -179,15 +180,15 @@ class KamaStrategy(IStrategy):
                 (df['chop'] < self.chop_threshold.value) &
                 (df['bb_width'] < float(self.bb_width_threshold.value))
             ),
-            'short'
+            'enter_short'
         ] = 1
         return df
 
     def populate_exit_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
         """
-        Populates the 'exit' signal in the DataFrame based on multiple technical indicators for Long Positions.
+        Populates the 'exit_long' and 'exit_short' signals in the DataFrame based on multiple technical indicators.
 
-        This function applies a set of conditions to the input DataFrame `df` to determine when a exit signal should be generated.
+        This function applies a set of conditions to the input DataFrame `df` to determine when an exit signal should be generated.
         The exit signal is set to 1 for rows where all of the following conditions are met:
             - The closing price is below the KAMA (Kaufman's Adaptive Moving Average).
             - The ADX (Average Directional Index) is above a specified threshold, indicating a strong trend.
@@ -200,8 +201,9 @@ class KamaStrategy(IStrategy):
             metadata (dict): Additional metadata (not used in this function, but required by the interface).
 
         Returns:
-            DataFrame: The input DataFrame with the 'sell' column updated where the sell conditions are met.
+            DataFrame: The input DataFrame with the 'exit_long' and 'exit_short' columns updated where the exit conditions are met.
         """
+        # Exit long positions
         df.loc[
             (
                 (df['close'] < df['kama']) &
@@ -210,8 +212,21 @@ class KamaStrategy(IStrategy):
                 (df['chop'] < self.chop_threshold.value) &
                 (df['bb_width'] < float(self.bb_width_threshold.value))
             ),
-            'sell'
+            'exit_long'
         ] = 1
+        
+        # Exit short positions (opposite conditions)
+        df.loc[
+            (
+                (df['close'] > df['kama']) &
+                (df['adx'] > self.adx_threshold.value) &
+                (df['close'] > df['long_term_kama']) &
+                (df['chop'] < self.chop_threshold.value) &
+                (df['bb_width'] < float(self.bb_width_threshold.value))
+            ),
+            'exit_short'
+        ] = 1
+        
         return df
 
     # ATR-based stoploss/takeprofit is not natively supported in Freqtrade, but you can use custom_stoploss

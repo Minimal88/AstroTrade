@@ -1,1 +1,1 @@
-docker compose -f freqTrade/docker-compose-jupyter.yml up
+docker compose -f freqtrade/docker-compose-jupyter.yml up

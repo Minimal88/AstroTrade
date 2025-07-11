@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd freqTrade
+cd freqtrade
 
 # Run All the backtesting scripts
 ./tests/kama_backtesting.sh
